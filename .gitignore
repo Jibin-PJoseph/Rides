@@ -1,0 +1,61 @@
+# IDE Specific Files
+*.iml
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+
+# Gradle Files
+.gradle
+/local.properties
+
+# Build Directories
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Local Configuration Files
+local.properties
+
+# Android Specific
+*.apk
+*.ap_
+*.dex
+*.so
+*.class
+*.jar
+*.war
+*.ear
+*.rs
+*.js
+*.d.ts
+
+# IntelliJ Specific
+*.ipr
+*.iws
+*.idea
+.idea/
+
+# OS System Files
+Thumbs.db
+ehthumbs.db
+
+# Log Files
+*.log
+
+
+# Generated files
+/generated
+/intermediates
+/output.json
+*/debug.keystore
+/android/app/debug.keystore
+
+# Kotlin/Java Specific
+*.class
+*.kotlin_module
+*.jar
