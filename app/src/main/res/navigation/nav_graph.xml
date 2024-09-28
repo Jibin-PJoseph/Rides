@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/vehicleListFragment">
+
+    <fragment android:id="@+id/vehicleListFragment"
+        android:name="com.ibm.rides.presentation.ui.VehicleListFragment"
+        android:label="Vehicle List"
+        tools:layout="@layout/fragment_vehicle_list">
+        <action
+            android:id="@+id/actionToVehicleDetailsFragment"
+            app:destination="@+id/vehicleDetailsFragment">
+            <argument
+                android:name="vehicle"
+                app:argType="com.ibm.rides.domain.model.Vehicle"/>
+        </action>
+    </fragment>
+
+    <fragment android:id="@+id/vehicleDetailsFragment"
+        android:name="com.ibm.rides.presentation.ui.details.VehicleDetailsFragment"
+        android:label="Vehicle Details">
+        <argument android:name="vehicle"
+            app:argType="com.ibm.rides.domain.model.Vehicle"/>
+    </fragment>
+
+    <fragment android:id="@+id/vehicleDetailsInfoFragment"
+        android:name="com.ibm.rides.presentation.ui.details.VehicleDetailsInfoFragment"
+        android:label="Vehicle Info Details">
+        <argument android:name="vehicle"
+            app:argType="com.ibm.rides.domain.model.Vehicle"/>
+    </fragment>
+    <fragment android:id="@+id/estimatedCarbonEmissionInfoFragment"
+        android:name="com.ibm.rides.presentation.ui.details.EstimatedCarbonEmissionInfoFragment"
+        android:label="Vehicle Info Details">
+        <argument android:name="vehicle"
+            app:argType="com.ibm.rides.domain.model.Vehicle"/>
+    </fragment>
+
+
+
+</navigation>

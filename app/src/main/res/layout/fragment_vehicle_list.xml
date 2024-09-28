@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInputVehicleCount"
+        android:layout_width="@dimen/width_0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16dp"
+        android:layout_marginBottom="@dimen/margin_12dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:enabled="true"
+        android:hint="@string/hint_vehicle_count"
+        android:textSize="@dimen/text_size_large"
+        android:padding="@dimen/padding_12dp"
+        android:inputType="number"
+        android:backgroundTint="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonFetchVehicles"
+        android:layout_width="@dimen/width_0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_medium"
+        android:text="@string/btn_fetch_vehicles_text"
+        android:backgroundTint="@color/colorPrimary"
+        android:padding="@dimen/padding_12dp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSortByCarType"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputVehicleCount"
+        app:layout_constraintWidth_percent="0.45" />
+
+    <Button
+        android:id="@+id/buttonSortByCarType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_8dp"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/margin_8dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_medium"
+        android:text="@string/btn_sort_by_car_type_text"
+        android:backgroundTint="@color/colorPrimary"
+        android:padding="@dimen/padding_12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonFetchVehicles"
+        app:layout_constraintTop_toBottomOf="@id/textInputVehicleCount"
+        app:layout_constraintWidth_percent="0.5" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewVehicleList"
+        android:layout_width="@dimen/width_0dp"
+        android:layout_height="@dimen/height_0dp"
+        android:layout_marginTop="@dimen/margin_16dp"
+        android:layout_marginBottom="@dimen/margin_16dp"
+        android:dividerHeight="@dimen/divider_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonSortByCarType" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@+id/recyclerViewVehicleList"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerViewVehicleList"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerViewVehicleList"
+        app:layout_constraintStart_toStartOf="@+id/recyclerViewVehicleList" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

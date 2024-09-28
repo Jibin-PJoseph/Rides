@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Rides</string>
+    <string name="hint_vehicle_count">Enter number of vehicles</string>
+    <string name="btn_fetch_vehicles_text">Fetch Vehicles</string>
+    <string name="btn_sort_by_car_type_text">Sort by Car Type</string>
+    <string name="title_car_type">Car Type:</string>
+    <string name="title_vin">VIN:</string>
+    <string name="title_make_and_model">Make and Model:</string>
+    <string name="title_car_color">Color:</string>
+    <string name="message_no_internet_connection">No Internet Connection</string>
+    <string name="message_vehicles_sorted_by_car_type">Vehicles sorted by car type</string>
+    <string name="message_vehicles_already_sorted">Vehicles are already sorted by car type</string>
+    <string name="message_something_went_wrong">Something went wrong</string>
 </resources>
