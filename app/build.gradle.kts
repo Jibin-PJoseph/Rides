@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.navigation.safe.args)
+
 }
 
 android {
@@ -63,6 +66,10 @@ dependencies {
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+
+    //viewpager2
+    implementation(libs.viewpager2)
+
 
     //Test
     testImplementation(libs.junit)
