@@ -31,6 +31,12 @@
         <argument android:name="vehicle"
             app:argType="com.ibm.rides.domain.model.Vehicle"/>
     </fragment>
+    <fragment android:id="@+id/estimatedCarbonEmissionInfoFragment"
+        android:name="com.ibm.rides.presentation.ui.details.EstimatedCarbonEmissionInfoFragment"
+        android:label="Vehicle Info Details">
+        <argument android:name="vehicle"
+            app:argType="com.ibm.rides.domain.model.Vehicle"/>
+    </fragment>
 
 
 
