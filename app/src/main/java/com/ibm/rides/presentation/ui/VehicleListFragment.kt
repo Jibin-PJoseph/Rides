@@ -22,8 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class VehicleListFragment :  Fragment(), VehicleSelectListener {
-    private  var binding: FragmentVehicleListBinding? = null
+class VehicleListFragment : Fragment(), VehicleSelectListener {
+    private var binding: FragmentVehicleListBinding? = null
     private val vehicleListAdapter by lazy(LazyThreadSafetyMode.NONE) {
         VehicleListAdapter(this)
     }
@@ -48,14 +48,29 @@ class VehicleListFragment :  Fragment(), VehicleSelectListener {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    updateState(state)
+
+                launch {
+                    viewModel.uiState.collect { state ->
+                        updateState(state)
+                    }
+                }
+
+                launch {
+                    viewModel.validationResult.collect { result ->
+                        result?.let {
+                            if (!it.isValid) {
+                                Toast.makeText(context, it.errorMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
                 }
             }
         }
 
         binding?.buttonFetchVehicles?.setOnClickListener {
-            fetchVehicles()
+            val countStr = binding?.textInputVehicleCount?.text.toString()
+
+            viewModel.validateAndFetchVehicles(countStr)
         }
 
         binding?.buttonSortByCarType?.setOnClickListener {
@@ -72,27 +87,20 @@ class VehicleListFragment :  Fragment(), VehicleSelectListener {
                     binding?.recyclerViewVehicleList?.scrollToPosition(0)
                 }
             }
+
             is State.VehiclesError -> {
                 shouldShowProgress(isVisible = false)
                 Toast.makeText(context, state.errorMessage, Toast.LENGTH_LONG).show()
             }
-            State.Loading ->  shouldShowProgress(isVisible = true)
+
+            State.Loading -> shouldShowProgress(isVisible = true)
         }
     }
 
-    private fun fetchVehicles() {
-        val countInput = binding?.textInputVehicleCount?.text.toString()
-        val count = countInput.toIntOrNull() ?: 0
-        if(count > 0 ) {
-            viewModel.fetchVehicles(count)
-        } else {
-            Toast.makeText(context, "Please enter a valid number", Toast.LENGTH_SHORT).show()
-        }
-
-    }
     private fun shouldShowProgress(isVisible: Boolean) {
         binding?.progress?.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -100,7 +108,7 @@ class VehicleListFragment :  Fragment(), VehicleSelectListener {
 
     override fun onVehicleSelected(vehicle: Vehicle) {
 
-        val action  = VehicleListFragmentDirections.actionToVehicleDetailsFragment(vehicle)
+        val action = VehicleListFragmentDirections.actionToVehicleDetailsFragment(vehicle)
         findNavController().navigate(action)
 
     }
