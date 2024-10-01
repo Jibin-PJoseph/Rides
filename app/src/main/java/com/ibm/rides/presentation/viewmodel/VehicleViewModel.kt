@@ -1,5 +1,6 @@
 package com.ibm.rides.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ibm.rides.domain.model.Vehicle
@@ -21,6 +22,10 @@ class VehicleViewModel @Inject constructor(
 
     private val _countValidationResult = MutableStateFlow<CountValidationResult?>(null)
     val validationResult: StateFlow<CountValidationResult?> get() = _countValidationResult
+
+    private val _carbonEmissions = MutableStateFlow<Double>(0.0)
+    val carbonEmissions: StateFlow<Double> get() = _carbonEmissions
+
 
     private var currentVehicles: List<Vehicle> = emptyList()
 
@@ -70,6 +75,20 @@ class VehicleViewModel @Inject constructor(
         }
     }
 
+    fun calculateAndSetEmissions(kilometrage: Int) {
+        val emissions = calculateCarbonEmissions(kilometrage)
+        _carbonEmissions.value = emissions
+        Log.e("EstimatedCarbonEmission", "clacl")
+
+    }
+
+    private fun calculateCarbonEmissions(kilometrage: Int): Double {
+        return if (kilometrage <= 5000) {
+            kilometrage * 1.0 // 1 unit per km for the first 5000 km
+        } else {
+            (5000 * 1.0) + ((kilometrage - 5000) * 1.5) // 1.5 units for km above 5000
+        }
+    }
     data class CountValidationResult(
         val isValid: Boolean,
         val validatedCount: Int = 0,
