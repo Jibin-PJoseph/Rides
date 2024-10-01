@@ -1,6 +1,5 @@
 package com.ibm.rides.presentation.ui
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -27,9 +26,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryVariant)
-        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimaryVariant)
 
         val navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(navController.graph)

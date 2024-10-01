@@ -1,0 +1,87 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/label_vin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VIN:"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_vin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1234567890ABCDE"
+        app:layout_constraintStart_toEndOf="@+id/label_vin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/label_vin"
+        android:layout_marginStart="8dp" />
+
+    <TextView
+        android:id="@+id/label_make_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make and Model:"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_vin"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text_make_model"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Toyota Camry"
+        app:layout_constraintStart_toEndOf="@+id/label_make_model"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/label_make_model"
+        android:layout_marginStart="8dp" />
+
+    <TextView
+        android:id="@+id/label_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Color:"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_make_model"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text_color"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Red"
+        app:layout_constraintStart_toEndOf="@+id/label_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/label_color"
+        android:layout_marginStart="8dp" />
+
+    <TextView
+        android:id="@+id/label_car_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Car Type:"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_color"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/text_car_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Sedan"
+        app:layout_constraintStart_toEndOf="@+id/label_car_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/label_car_type"
+        android:layout_marginStart="8dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
