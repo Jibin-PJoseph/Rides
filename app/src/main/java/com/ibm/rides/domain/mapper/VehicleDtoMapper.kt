@@ -1,7 +1,6 @@
 package com.ibm.rides.domain.mapper
 
 import com.ibm.rides.data.model.VehicleResponseDto
-import com.ibm.rides.domain.NullableListDataMapper
 import com.ibm.rides.domain.model.Vehicle
 
 class VehicleResponseDtoMapper : NullableListDataMapper<VehicleResponseDto, Vehicle> {
