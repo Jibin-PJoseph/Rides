@@ -1,7 +1,6 @@
 package com.ibm.rides.presentation.ui.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ibm.rides.databinding.EstimatedCarbonEmissionInfoFragmentBinding
 import com.ibm.rides.domain.model.Vehicle
+import com.ibm.rides.presentation.ui.state.VehicleUiState
 import com.ibm.rides.presentation.viewmodel.VehicleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -48,9 +48,8 @@ class EstimatedCarbonEmissionInfoFragment :  Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.carbonEmissions.collect { emissions ->
-                    binding?.textViewEstimatedCarbonEmissions?.text =
-                        "Estimated Carbon Emissions: $emissions units"
+                viewModel.uiState.collect { uiState ->
+                    handleUiState(uiState)
                 }
             }
         }
@@ -62,6 +61,16 @@ class EstimatedCarbonEmissionInfoFragment :  Fragment() {
         _binding = null
     }
 
+    private fun handleUiState(uiState: VehicleUiState) {
+        when (uiState) {
+            is VehicleUiState.CarbonEmissionsSuccess -> {
+                binding.textViewEstimatedCarbonEmissions.text =
+                    "Estimated Carbon Emissions: ${uiState.emissions} units"
+            }
+            else -> {
+            }
+        }
+    }
     companion object {
         private const val ARG_VEHICLE = "vehicle"
 

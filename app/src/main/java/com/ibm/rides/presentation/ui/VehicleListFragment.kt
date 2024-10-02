@@ -16,10 +16,11 @@ import com.ibm.rides.databinding.FragmentVehicleListBinding
 import com.ibm.rides.domain.model.Vehicle
 import com.ibm.rides.presentation.ui.adapter.VehicleListAdapter
 import com.ibm.rides.presentation.ui.adapter.VehicleSelectListener
-import com.ibm.rides.presentation.viewmodel.State
+import com.ibm.rides.presentation.ui.state.VehicleUiState
 import com.ibm.rides.presentation.viewmodel.VehicleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class VehicleListFragment : Fragment(), VehicleSelectListener {
@@ -46,54 +47,56 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
             setHasFixedSize(true)
             adapter = vehicleListAdapter
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                launch {
-                    viewModel.uiState.collect { state ->
-                        updateState(state)
-                    }
-                }
-
-                launch {
-                    viewModel.validationResult.collect { result ->
-                        result?.let {
-                            if (!it.isValid) {
-                                Toast.makeText(context, it.errorMessage, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        setupObservers()
 
         binding?.buttonFetchVehicles?.setOnClickListener {
             val countStr = binding?.textInputVehicleCount?.text.toString()
-
             viewModel.validateAndFetchVehicles(countStr)
         }
 
         binding?.buttonSortByCarType?.setOnClickListener {
             viewModel.sortVehiclesByCarType()
         }
-
     }
 
-    private fun updateState(state: State) {
-        when (state) {
-            is State.VehicleSuccess -> {
-                shouldShowProgress(isVisible = false)
-                vehicleListAdapter.submitList(state.vehicles) {
+    private fun setupObservers(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    handleUiState(uiState)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.eventState.collect { event ->
+                    event?.getContentIfNotHandled()?.let { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+    private fun handleUiState(uiState: VehicleUiState) {
+        when (uiState) {
+            is VehicleUiState.IdleState -> shouldShowProgress(false)
+            is VehicleUiState.Loading -> shouldShowProgress(true)
+            is VehicleUiState.Success -> {
+                shouldShowProgress(false)
+                vehicleListAdapter.submitList(uiState.vehicles) {
                     binding?.recyclerViewVehicleList?.scrollToPosition(0)
                 }
             }
-
-            is State.VehiclesError -> {
-                shouldShowProgress(isVisible = false)
-                Toast.makeText(context, state.errorMessage, Toast.LENGTH_LONG).show()
+            is VehicleUiState.ValidationError -> {
+                shouldShowProgress(false)
+                Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             }
-
-            State.Loading -> shouldShowProgress(isVisible = true)
+            is VehicleUiState.Error -> {
+                shouldShowProgress(false)
+                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+            }
+            else -> { }
         }
     }
 
@@ -107,10 +110,7 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
     }
 
     override fun onVehicleSelected(vehicle: Vehicle) {
-
         val action = VehicleListFragmentDirections.actionToVehicleDetailsFragment(vehicle)
         findNavController().navigate(action)
-
     }
-
 }
