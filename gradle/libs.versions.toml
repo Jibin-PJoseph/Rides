@@ -16,6 +16,11 @@ hilt = "2.46.1"
 retrofit = "2.9.0"
 navigation = "2.6.0"
 viewpager2 = "1.0.0"
+mockk = "1.12.0"
+coroutinesTest = "1.6.0"
+coreTesting = "2.1.0"
+
+
 
 
 
@@ -50,6 +55,10 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 #Viewpager2
 viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 
+# Testing
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+coroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+coreTesting = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting"  }
 
 
 [plugins]
