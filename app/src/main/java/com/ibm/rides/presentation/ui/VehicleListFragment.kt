@@ -1,9 +1,11 @@
 package com.ibm.rides.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -52,6 +54,8 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
 
         binding?.buttonFetchVehicles?.setOnClickListener {
             val countStr = binding?.textInputVehicleCount?.text.toString()
+            val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
             viewModel.validateAndFetchVehicles(countStr)
         }
 
@@ -80,23 +84,40 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
     }
     private fun handleUiState(uiState: VehicleUiState) {
         when (uiState) {
-            is VehicleUiState.IdleState -> shouldShowProgress(false)
-            is VehicleUiState.Loading -> shouldShowProgress(true)
+            is VehicleUiState.IdleState -> {
+                shouldShowProgress(false)
+                binding?.buttonFetchVehicles?.isEnabled = true
+            }
+            is VehicleUiState.Loading -> {
+                shouldShowProgress(true)
+                binding?.buttonFetchVehicles?.isEnabled = false
+            }
             is VehicleUiState.Success -> {
                 shouldShowProgress(false)
+                binding?.buttonFetchVehicles?.isEnabled = true
                 vehicleListAdapter.submitList(uiState.vehicles) {
                     binding?.recyclerViewVehicleList?.scrollToPosition(0)
                 }
             }
             is VehicleUiState.ValidationError -> {
                 shouldShowProgress(false)
+                binding?.buttonFetchVehicles?.isEnabled = true
                 Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             }
             is VehicleUiState.Error -> {
                 shouldShowProgress(false)
+                binding?.buttonFetchVehicles?.isEnabled = true
                 Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                uiState.vehicles?.let { vehicles ->
+                    vehicleListAdapter.submitList(vehicles) {
+                        binding?.recyclerViewVehicleList?.scrollToPosition(0)
+                    }
+                }
             }
-            else -> { }
+            else -> {
+                shouldShowProgress(false)
+                binding?.buttonFetchVehicles?.isEnabled = true
+            }
         }
     }
 

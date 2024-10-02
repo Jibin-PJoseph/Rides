@@ -8,5 +8,5 @@ sealed class VehicleUiState {
     data class Success(val vehicles: List<Vehicle>) : VehicleUiState()
     data class ValidationError(val message: String) : VehicleUiState()
     data class CarbonEmissionsSuccess(val emissions: Double) : VehicleUiState()
-    data class Error(val message: String) : VehicleUiState()
+    data class Error(val message: String, val vehicles: List<Vehicle>? = null) : VehicleUiState()
 }
