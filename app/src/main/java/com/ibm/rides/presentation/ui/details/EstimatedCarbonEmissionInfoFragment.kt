@@ -13,8 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.ibm.rides.databinding.EstimatedCarbonEmissionInfoFragmentBinding
 import com.ibm.rides.domain.model.Vehicle
 import com.ibm.rides.presentation.viewmodel.VehicleViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class EstimatedCarbonEmissionInfoFragment :  Fragment() {
     private  var binding: EstimatedCarbonEmissionInfoFragmentBinding? = null
     private val viewModel: VehicleViewModel by viewModels()
