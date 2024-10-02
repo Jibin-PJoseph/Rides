@@ -15,17 +15,20 @@ import com.ibm.rides.domain.model.Vehicle
 import com.ibm.rides.presentation.viewmodel.VehicleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 @AndroidEntryPoint
 class EstimatedCarbonEmissionInfoFragment :  Fragment() {
-    private  var binding: EstimatedCarbonEmissionInfoFragmentBinding? = null
+    private  var _binding: EstimatedCarbonEmissionInfoFragmentBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel: VehicleViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = EstimatedCarbonEmissionInfoFragmentBinding.inflate(inflater, container, false)
-        return binding?.root
+    ): View {
+        _binding = EstimatedCarbonEmissionInfoFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,14 +39,10 @@ class EstimatedCarbonEmissionInfoFragment :  Fragment() {
         vehicleInfo?.let { vehicle ->
             val kilometrage = vehicle.kilometrage
             if (kilometrage != null) {
-                try {
-                    viewModel.calculateAndSetEmissions(kilometrage)
-                } catch (e: Exception) {
-                   e.printStackTrace()
-                }
+                viewModel.calculateAndSetEmissions(kilometrage)
+
             } else {
-                Log.e("EstimatedCarbonEmission", "Kilometrage is null")
-                binding?.textViewEstimatedCarbonEmissions?.text = "Kilometrage data is unavailable"
+                binding.textViewEstimatedCarbonEmissions.text = "Kilometrage data is unavailable"
             }
         }
 
@@ -60,7 +59,7 @@ class EstimatedCarbonEmissionInfoFragment :  Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     companion object {
