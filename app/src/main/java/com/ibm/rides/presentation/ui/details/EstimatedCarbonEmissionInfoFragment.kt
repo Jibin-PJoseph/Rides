@@ -1,5 +1,6 @@
 package com.ibm.rides.presentation.ui.details
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,15 +35,22 @@ class EstimatedCarbonEmissionInfoFragment :  Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val vehicleInfo = arguments?.getParcelable<Vehicle>(ARG_VEHICLE)
+        arguments?.let {
 
-        vehicleInfo?.let { vehicle ->
-            val kilometrage = vehicle.kilometrage
-            if (kilometrage != null) {
-                viewModel.calculateAndSetEmissions(kilometrage)
-
+            val vehicleInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.getParcelable(ARG_VEHICLE, Vehicle::class.java)  // For API level 33+
             } else {
-                binding.textViewEstimatedCarbonEmissions.text = "Kilometrage data is unavailable"
+                @Suppress("DEPRECATION")
+                it.getParcelable(ARG_VEHICLE)  // For API levels below 33
+            }
+
+            vehicleInfo?.let { vehicle ->
+                val kilometrage = vehicle.kilometrage
+                if (kilometrage != null) {
+                    viewModel.calculateAndSetEmissions(kilometrage)
+                } else {
+                    binding.textViewEstimatedCarbonEmissions.text = "Kilometrage data is unavailable"
+                }
             }
         }
 
