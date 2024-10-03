@@ -33,6 +33,8 @@ class VehicleViewModel @Inject constructor(
     val eventState: StateFlow<Event<String>?> get() = _eventState
 
     private var currentVehicles: List<Vehicle> = emptyList()
+    private var isSortedByCarType = false
+
 
     init {
         if (currentVehicles.isNotEmpty()) {
@@ -42,6 +44,7 @@ class VehicleViewModel @Inject constructor(
 
     fun resetUiState() {
         _uiState.value = VehicleUiState.IdleState
+        isSortedByCarType = false
     }
 
     fun validateAndFetchVehicles(countStr: String) {
@@ -64,7 +67,7 @@ class VehicleViewModel @Inject constructor(
         _uiState.value = VehicleUiState.Loading
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            _uiState.value = VehicleUiState.Error(throwable.message ?: "Something went wrong")
+            _uiState.value = VehicleUiState.Error("No Internet Connection", currentVehicles.takeIf { it.isNotEmpty() })
         }
 
         viewModelScope.launch(coroutineExceptionHandler) {
@@ -82,7 +85,9 @@ class VehicleViewModel @Inject constructor(
             result.fold(
                 onSuccess = { vehicles ->
                     currentVehicles = vehicles
+                    isSortedByCarType = false
                     _uiState.value = VehicleUiState.Success(vehicles)
+
                 },
                 onFailure = { exception ->
                     if (currentVehicles.isNotEmpty()) {
@@ -91,8 +96,7 @@ class VehicleViewModel @Inject constructor(
                             currentVehicles
                         )
                     } else {
-                        _uiState.value =
-                            VehicleUiState.Error(exception.message ?: "Something went wrong")
+                        _uiState.value = VehicleUiState.Error("No Internet Connection", currentVehicles.takeIf { it.isNotEmpty() })
                     }
                 }
             )
@@ -106,8 +110,14 @@ class VehicleViewModel @Inject constructor(
 
     fun sortVehiclesByCarType() {
         if (currentVehicles.isNotEmpty()) {
-            val sortedVehicles = sortVehiclesUseCase.sortByCarType(currentVehicles)
-            _uiState.value = VehicleUiState.Success(sortedVehicles)
+            if (!isSortedByCarType) {
+                val sortedVehicles = sortVehiclesUseCase.sortByCarType(currentVehicles)
+                _uiState.value = VehicleUiState.Success(sortedVehicles)
+                isSortedByCarType = true
+                _eventState.value = Event("Vehicles sorted by car type")
+            } else {
+                _eventState.value = Event("Vehicles are already sorted by car type")
+            }
         }
     }
 }

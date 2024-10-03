@@ -50,12 +50,12 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
             adapter = vehicleListAdapter
         }
 
+        enableSortButton(false)
         setupObservers()
 
         binding?.buttonFetchVehicles?.setOnClickListener {
             val countStr = binding?.textInputVehicleCount?.text.toString()
-            val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            hideKeyboard(view)
             viewModel.validateAndFetchVehicles(countStr)
         }
 
@@ -64,7 +64,7 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
         }
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -82,47 +82,85 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
             }
         }
     }
+
     private fun handleUiState(uiState: VehicleUiState) {
         when (uiState) {
             is VehicleUiState.IdleState -> {
                 shouldShowProgress(false)
-                binding?.buttonFetchVehicles?.isEnabled = true
+                enableFetchVehiclesButton(true)
+                enableSortButton(false)
             }
+
             is VehicleUiState.Loading -> {
                 shouldShowProgress(true)
-                binding?.buttonFetchVehicles?.isEnabled = false
+                enableFetchVehiclesButton(false)
+                enableSortButton(false)
             }
+
             is VehicleUiState.Success -> {
                 shouldShowProgress(false)
-                binding?.buttonFetchVehicles?.isEnabled = true
+                enableFetchVehiclesButton(true)
+                enableSortButton(true)
                 vehicleListAdapter.submitList(uiState.vehicles) {
                     binding?.recyclerViewVehicleList?.scrollToPosition(0)
                 }
             }
+
             is VehicleUiState.ValidationError -> {
                 shouldShowProgress(false)
-                binding?.buttonFetchVehicles?.isEnabled = true
+                enableFetchVehiclesButton(true)
+                enableSortButton(true)
+                enableSortButton(false)
                 Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             }
+
             is VehicleUiState.Error -> {
                 shouldShowProgress(false)
-                binding?.buttonFetchVehicles?.isEnabled = true
+                enableFetchVehiclesButton(true)
                 Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
                 uiState.vehicles?.let { vehicles ->
-                    vehicleListAdapter.submitList(vehicles) {
-                        binding?.recyclerViewVehicleList?.scrollToPosition(0)
+                    if (vehicles.isNotEmpty()) {
+                        binding?.buttonSortByCarType?.isEnabled = true
+                        vehicleListAdapter.submitList(vehicles)
+                    } else {
+                        binding?.buttonSortByCarType?.isEnabled = false
                     }
+                } ?: run {
+                    binding?.buttonSortByCarType?.isEnabled = false
                 }
+                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
             }
+
+            is VehicleUiState.SortedSuccess -> {
+                shouldShowProgress(false)
+                enableSortButton(false)
+                vehicleListAdapter.submitList(uiState.vehicles)
+                Toast.makeText(context, "Sorted by Car Type", Toast.LENGTH_LONG).show()
+            }
+
             else -> {
                 shouldShowProgress(false)
-                binding?.buttonFetchVehicles?.isEnabled = true
+                enableFetchVehiclesButton(true)
             }
         }
     }
 
     private fun shouldShowProgress(isVisible: Boolean) {
         binding?.progress?.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
+    private fun enableFetchVehiclesButton(isEnabled: Boolean) {
+        binding?.buttonFetchVehicles?.isEnabled = isEnabled
+    }
+
+    private fun enableSortButton(isEnabled: Boolean) {
+        binding?.buttonSortByCarType?.isEnabled = isEnabled
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onDestroyView() {
