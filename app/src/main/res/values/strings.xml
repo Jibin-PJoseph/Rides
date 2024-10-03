@@ -7,4 +7,8 @@
     <string name="title_vin">VIN:</string>
     <string name="title_make_and_model">Make and Model:</string>
     <string name="title_car_color">Color:</string>
+    <string name="message_no_internet_connection">No Internet Connection</string>
+    <string name="message_vehicles_sorted_by_car_type">Vehicles sorted by car type</string>
+    <string name="message_vehicles_already_sorted">Vehicles are already sorted by car type</string>
+    <string name="message_something_went_wrong">Something went wrong</string>
 </resources>

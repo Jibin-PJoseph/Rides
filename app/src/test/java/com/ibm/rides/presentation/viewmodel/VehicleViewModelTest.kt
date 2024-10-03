@@ -8,6 +8,7 @@ import com.ibm.rides.domain.usecase.SortVehiclesUseCase
 import com.ibm.rides.domain.usecase.ValidateCountUseCase
 import com.ibm.rides.domain.usecase.VehiclesUseCase
 import com.ibm.rides.presentation.ui.state.VehicleUiState
+import com.ibm.rides.utils.ResourceManager
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -32,6 +33,7 @@ class VehicleViewModelTest {
     private val validateCountUseCase: ValidateCountUseCase = mockk()
     private val sortVehiclesUseCase: SortVehiclesUseCase = mockk()
     private val networkChecker: NetworkChecker = mockk()
+    private val resourceManager: ResourceManager = mockk()
     private lateinit var viewModel: VehicleViewModel
 
     private val testDispatcher = StandardTestDispatcher()
@@ -76,7 +78,8 @@ class VehicleViewModelTest {
             calculateEmissionsUseCase,
             validateCountUseCase,
             sortVehiclesUseCase,
-            networkChecker
+            networkChecker,
+            resourceManager
         )
 
         viewModel.resetUiState()

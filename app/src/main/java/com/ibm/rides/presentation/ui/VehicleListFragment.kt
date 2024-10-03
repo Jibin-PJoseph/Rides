@@ -111,13 +111,11 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
                 enableFetchVehiclesButton(true)
                 enableSortButton(true)
                 enableSortButton(false)
-                Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             }
 
             is VehicleUiState.Error -> {
                 shouldShowProgress(false)
                 enableFetchVehiclesButton(true)
-                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
                 uiState.vehicles?.let { vehicles ->
                     if (vehicles.isNotEmpty()) {
                         binding?.buttonSortByCarType?.isEnabled = true
@@ -128,14 +126,12 @@ class VehicleListFragment : Fragment(), VehicleSelectListener {
                 } ?: run {
                     binding?.buttonSortByCarType?.isEnabled = false
                 }
-                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
             }
 
             is VehicleUiState.SortedSuccess -> {
                 shouldShowProgress(false)
                 enableSortButton(false)
                 vehicleListAdapter.submitList(uiState.vehicles)
-                Toast.makeText(context, "Sorted by Car Type", Toast.LENGTH_LONG).show()
             }
 
             else -> {

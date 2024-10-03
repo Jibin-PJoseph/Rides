@@ -2,6 +2,7 @@ package com.ibm.rides.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ibm.rides.R
 import com.ibm.rides.data.NetworkChecker
 import com.ibm.rides.domain.model.Vehicle
 import com.ibm.rides.domain.usecase.CalculateEmissionsUseCase
@@ -10,6 +11,7 @@ import com.ibm.rides.domain.usecase.ValidateCountUseCase
 import com.ibm.rides.domain.usecase.VehiclesUseCase
 import com.ibm.rides.presentation.ui.state.VehicleUiState
 import com.ibm.rides.utils.Event
+import com.ibm.rides.utils.ResourceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +26,8 @@ class VehicleViewModel @Inject constructor(
     private val validateCountUseCase: ValidateCountUseCase,
     private val sortVehiclesUseCase: SortVehiclesUseCase,
     private val networkChecker: NetworkChecker,
-    ) : ViewModel() {
+    private val resourceManager: ResourceManager
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VehicleUiState>(VehicleUiState.IdleState)
     val uiState: StateFlow<VehicleUiState> get() = _uiState
@@ -34,6 +37,8 @@ class VehicleViewModel @Inject constructor(
 
     private var currentVehicles: List<Vehicle> = emptyList()
     private var isSortedByCarType = false
+    private val commonErrorMessage =
+        resourceManager.getString(R.string.message_something_went_wrong)
 
 
     init {
@@ -67,18 +72,12 @@ class VehicleViewModel @Inject constructor(
         _uiState.value = VehicleUiState.Loading
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            _uiState.value = VehicleUiState.Error("No Internet Connection", currentVehicles.takeIf { it.isNotEmpty() })
+            _uiState.value =
+                VehicleUiState.Error(commonErrorMessage, currentVehicles.takeIf { it.isNotEmpty() })
         }
 
         viewModelScope.launch(coroutineExceptionHandler) {
-            if (!networkChecker.isNetworkAvailable()) {
-                if (currentVehicles.isNotEmpty()) {
-                    _uiState.value = VehicleUiState.Error("No Internet Connection", currentVehicles)
-                } else {
-                    _uiState.value = VehicleUiState.Error("No Internet Connection")
-                }
-                return@launch
-            }
+            if (!handleNoInternetConnection()) return@launch
 
             val result = vehicleUseCase.getVehicles(size)
 
@@ -92,14 +91,33 @@ class VehicleViewModel @Inject constructor(
                 onFailure = { exception ->
                     if (currentVehicles.isNotEmpty()) {
                         _uiState.value = VehicleUiState.Error(
-                            exception.message ?: "Something went wrong",
+                            exception.message ?: commonErrorMessage,
                             currentVehicles
                         )
                     } else {
-                        _uiState.value = VehicleUiState.Error("No Internet Connection", currentVehicles.takeIf { it.isNotEmpty() })
+                        _uiState.value = VehicleUiState.Error(
+                            commonErrorMessage,
+                            currentVehicles.takeIf { it.isNotEmpty() })
                     }
+                    _eventState.value = Event(exception.message ?: commonErrorMessage)
+
                 }
             )
+        }
+    }
+
+    private fun handleNoInternetConnection(): Boolean {
+        return if (!networkChecker.isNetworkAvailable()) {
+            val errorMessage = resourceManager.getString(R.string.message_no_internet_connection)
+            if (currentVehicles.isNotEmpty()) {
+                _uiState.value = VehicleUiState.Error(errorMessage, currentVehicles)
+            } else {
+                _uiState.value = VehicleUiState.Error(errorMessage)
+            }
+            _eventState.value = Event(errorMessage)
+            false
+        } else {
+            true
         }
     }
 
@@ -114,9 +132,11 @@ class VehicleViewModel @Inject constructor(
                 val sortedVehicles = sortVehiclesUseCase.sortByCarType(currentVehicles)
                 _uiState.value = VehicleUiState.Success(sortedVehicles)
                 isSortedByCarType = true
-                _eventState.value = Event("Vehicles sorted by car type")
+                _eventState.value =
+                    Event(resourceManager.getString(R.string.message_vehicles_sorted_by_car_type))
             } else {
-                _eventState.value = Event("Vehicles are already sorted by car type")
+                _eventState.value =
+                    Event(resourceManager.getString(R.string.message_vehicles_already_sorted))
             }
         }
     }
