@@ -42,6 +42,10 @@ class VehicleViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
+        every { resourceManager.getString(any()) } answers { "No Internet Connection" }
+        every { resourceManager.getString(any()) } answers { "Something went wrong" }
+        every { resourceManager.getString(any()) } answers { "Vehicles sorted by car type" }
+        every { resourceManager.getString(any()) } answers { "Vehicles already sorted" }
 
         every { calculateEmissionsUseCase.calculate(-100) } returns 0.0
         every { calculateEmissionsUseCase.calculate(3000) } returns 3000.0
