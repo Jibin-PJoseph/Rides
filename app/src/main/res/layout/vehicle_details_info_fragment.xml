@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="24dp"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/label_vin"
@@ -11,6 +12,8 @@
         android:layout_height="wrap_content"
         android:text="VIN:"
         android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,19 +22,32 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="1234567890ABCDE"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toEndOf="@+id/label_vin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/label_vin"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="16dp" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_vin"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/label_make_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Make and Model:"
+        android:textColor="@color/black"
         android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/label_vin"
+        app:layout_constraintTop_toBottomOf="@id/text_vin"
         android:layout_marginTop="16dp" />
 
     <TextView
@@ -39,17 +55,30 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Toyota Camry"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toEndOf="@+id/label_make_model"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/label_make_model"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="16dp" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_make_model"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/label_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Color:"
+        android:textColor="@color/black"
         android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_make_model"
         android:layout_marginTop="16dp" />
@@ -59,17 +88,30 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Red"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toEndOf="@+id/label_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/label_color"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="16dp" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_color"
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/label_car_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Car Type:"
+        android:textColor="@color/black"
         android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/label_color"
         android:layout_marginTop="16dp" />
@@ -79,9 +121,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Sedan"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintStart_toEndOf="@+id/label_car_type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/label_car_type"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
